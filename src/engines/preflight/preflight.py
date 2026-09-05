@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 
 class CheckStatus(Enum):
@@ -48,11 +48,11 @@ class PreflightEngine:
     """Validates KDP publishing requirements."""
 
     # KDP constraints
-    MIN_PAGES = 24
-    MAX_PAGES = 828
-    MAX_FILE_SIZE_MB = 650
-    MIN_DPI = 300
-    VALID_TRIMS = {"5x8", "5.25x8", "5.5x8.5", "6x9", "7x10", "8x10", "8.5x11"}
+    MIN_PAGES: ClassVar[int] = 24
+    MAX_PAGES: ClassVar[int] = 828
+    MAX_FILE_SIZE_MB: ClassVar[int] = 650
+    MIN_DPI: ClassVar[int] = 300
+    VALID_TRIMS: ClassVar[set[str]] = {"5x8", "5.25x8", "5.5x8.5", "6x9", "7x10", "8x10", "8.5x11"}
 
     def __init__(self) -> None:
         self.report = PreflightReport()

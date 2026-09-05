@@ -18,8 +18,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Set up Typst
-        uses: enter-at/setup-typst@v0.3
+      - name: Install Typst
+        run: |
+          curl -sSL https://github.com/typst/typst/releases/download/v0.15.1/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ --strip-components=1
+          sudo mv typst /usr/local/bin/
+          typst --version
       - name: Install dependencies
         run: pip install -e .
       - name: Build

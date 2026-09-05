@@ -14,17 +14,17 @@ import yaml
 from rich.console import Console
 from rich.table import Table
 
-from .config import PipelineConfig
-from .state import PipelineState, Stage
+from ..adapters.drive.adapter import DriveAdapter
+from ..adapters.typst.adapter import TypstAdapter
 from ..connectors.book_dna.reader import BookDNAReader
 from ..connectors.source_registry.registry import SourceRegistry
 from ..engines.content_assembler.assembler import ContentAssembler, Manuscript
-from ..engines.editorial.editor import EditorialEngine, EditorialReport
-from ..engines.typesetter.typesetter import Typesetter, TypesetConfig
 from ..engines.cover_gen.cover import CoverGenerator
+from ..engines.editorial.editor import EditorialEngine, EditorialReport
 from ..engines.preflight.preflight import PreflightEngine, PreflightReport
-from ..adapters.typst.adapter import TypstAdapter
-from ..adapters.drive.adapter import DriveAdapter
+from ..engines.typesetter.typesetter import TypesetConfig, Typesetter
+from .config import PipelineConfig
+from .state import PipelineState, Stage
 
 console = Console()
 
@@ -93,8 +93,8 @@ class Pipeline:
                             data = yaml.safe_load(dna_file.read_text(encoding="utf-8"))
                             if data and str(data.get("id", "")).lower() == product_id.lower():
                                 return child
-                        except Exception:
-                            pass
+                        except (yaml.YAMLError, OSError):
+                            continue
         raise FileNotFoundError(f"No product directory found for '{product_id}' in {self.config.products_dir}")
 
     def _execute_stage(self, stage: Stage, product_id: str) -> None:
@@ -177,7 +177,7 @@ class Pipeline:
             try:
                 pdf_out = self.cover_path.with_suffix(".pdf")
                 adapter.render(self.cover_path.read_text(encoding="utf-8"), TypesetConfig(), pdf_out)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 console.print(f"[yellow]Cover compilation warning: {e}[/]")
 
     def _preflight(self, product_id: str) -> None:
@@ -223,9 +223,9 @@ class Pipeline:
     def _deliver(self, product_id: str) -> None:
         if self.config.drive_folder_id:
             try:
-                adapter = DriveAdapter(self.config.drive_folder_id)
-                adapter.upload_directory(self.config.output_dir)
-            except Exception as e:
+                adapter = DriveAdapter()
+                adapter.upload_directory(self.config.output_dir, self.config.drive_folder_id)
+            except Exception as e:  # noqa: BLE001
                 console.print(f"[yellow]Drive delivery warning: {e}[/]")
 
     def _print_summary(self, product_id: str) -> None:

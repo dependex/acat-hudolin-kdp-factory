@@ -1,5 +1,6 @@
 """Integration test for Golden Product 001."""
 from pathlib import Path
+
 from src.orchestrator.config import PipelineConfig
 from src.orchestrator.pipeline import Pipeline
 from src.orchestrator.state import Stage

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 
 
@@ -43,8 +43,8 @@ class PipelineState:
     def transition(self, stage: Stage) -> None:
         if self.history:
             self.history[-1].status = "done"
-            self.history[-1].completed_at = datetime.now()
+            self.history[-1].completed_at = datetime.now(UTC)
         
-        entry = StageEntry(stage=stage, status="running", started_at=datetime.now())
+        entry = StageEntry(stage=stage, status="running", started_at=datetime.now(UTC))
         self.history.append(entry)
         self.current = stage

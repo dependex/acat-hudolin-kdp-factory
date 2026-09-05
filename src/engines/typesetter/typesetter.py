@@ -5,6 +5,7 @@ Supports 6x9 inch KDP format with proper margins, typography, and pagination.
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
@@ -58,6 +59,33 @@ class Typesetter:
     def _generate_source(self, manuscript: Any) -> str:
         """Generate typesetting source from manuscript."""
         return self._generate_typst_source(manuscript)
+
+    def _markdown_to_typst(self, md: str) -> str:
+        """Convert standard markdown syntax into clean Typst markup."""
+        lines = []
+        for line in md.splitlines():
+            # Convert headings:
+            if line.startswith("#### "):
+                line = "==== " + line[5:]
+            elif line.startswith("### "):
+                line = "=== " + line[4:]
+            elif line.startswith("## "):
+                line = "== " + line[3:]
+            elif line.startswith("# "):
+                line = "= " + line[2:]
+
+            # Convert bold **text** to *text*
+            line = re.sub(r"\*\*(.+?)\*\*", r"*\1*", line)
+
+            # Escape hashes (like hex colors #FFD166, hashtags, etc) so Typst treats them as literal characters
+            line = re.sub(r"#([0-9A-Fa-f]{3,8})\b", r"\\#\1", line)
+            line = re.sub(r"(?<!\\)#(?!set|show|let|align|text|v|h|pagebreak|line|rect|box|place|rotate|image|link|outline|list|enum)", r"\\#", line)
+
+            # Convert numbered lists 1. item to + item
+            line = re.sub(r"^\s*\d+\.\s+", "+ ", line)
+
+            lines.append(line)
+        return "\n".join(lines)
 
     def _generate_typst_source(self, manuscript: Any) -> str:
         """Generate Typst source code."""
@@ -125,31 +153,3 @@ Pubblicato tramite DEPENDEX KDP Factory.
 """)
 
         return "\n".join(parts)
-
-    def _markdown_to_typst(self, md: str) -> str:
-        """Convert standard markdown syntax into clean Typst markup."""
-        import re
-        lines = []
-        for line in md.splitlines():
-            # Convert headings:
-            if line.startswith("#### "):
-                line = "==== " + line[5:]
-            elif line.startswith("### "):
-                line = "=== " + line[4:]
-            elif line.startswith("## "):
-                line = "== " + line[3:]
-            elif line.startswith("# "):
-                line = "= " + line[2:]
-
-            # Convert bold **text** to *text*
-            line = re.sub(r"\*\*(.+?)\*\*", r"*\1*", line)
-
-            # Escape hashes (like hex colors #FFD166, hashtags, etc) so Typst treats them as literal characters
-            line = re.sub(r"#([0-9A-Fa-f]{3,8})\b", r"\\#\1", line)
-            line = re.sub(r"(?<!\\)#(?!set|show|let|align|text|v|h|pagebreak|line|rect|box|place|rotate|image|link|outline|list|enum)", r"\\#", line)
-
-            # Convert numbered lists 1. item to + item
-            line = re.sub(r"^\s*\d+\.\s+", "+ ", line)
-
-            lines.append(line)
-        return "\n".join(lines)

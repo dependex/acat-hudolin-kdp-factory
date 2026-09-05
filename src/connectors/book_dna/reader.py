@@ -13,7 +13,7 @@ import yaml
 try:
     import jsonschema
 except ImportError:
-    jsonschema = None  # type: ignore[assignment]
+    jsonschema = None
 
 
 class BookDNAReader:

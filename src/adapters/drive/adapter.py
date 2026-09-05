@@ -30,6 +30,16 @@ class DriveAdapter:
         # TODO: Implement with Google Drive API
         return ""
 
+    def upload_directory(self, local_dir: Path, folder_id: str = "") -> list[str]:
+        """Upload all files from a local directory to Drive."""
+        uploaded: list[str] = []
+        if local_dir.exists():
+            for file_path in local_dir.iterdir():
+                if file_path.is_file():
+                    file_id = self.upload_file(file_path, folder_id)
+                    uploaded.append(file_id)
+        return uploaded
+
     def sync_folder(self, folder_id: str, local_dir: Path) -> list[Path]:
         """Sync a Drive folder to local directory."""
         # TODO: Implement

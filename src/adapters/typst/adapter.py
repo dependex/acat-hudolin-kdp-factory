@@ -4,6 +4,7 @@ Wraps the Typst binary for PDF rendering.
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -15,9 +16,8 @@ class TypstAdapter:
     """Adapter for the Typst typesetting engine."""
 
     def __init__(self) -> None:
-        self._binary = shutil.which("typst")
+        self._binary: str | None = shutil.which("typst")
         if not self._binary:
-            import os
             local_appdata = Path(os.environ.get("LOCALAPPDATA", ""))
             candidates = [
                 local_appdata / "Microsoft" / "WinGet" / "Links" / "typst.exe",
@@ -44,14 +44,14 @@ class TypstAdapter:
         typ_file = output.with_suffix(".typ")
         typ_file.write_text(source, encoding="utf-8")
 
-        if not self.validate():
+        if not self._binary or not self.validate():
             # Fallback: just save the source, warn about missing binary
             return typ_file
 
         # Run Typst compile
         result = subprocess.run(
             [self._binary, "compile", str(typ_file), str(output)],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True, text=True, timeout=120, check=False,
         )
 
         if result.returncode != 0:
