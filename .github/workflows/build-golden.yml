@@ -18,6 +18,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Set up Typst
+        uses: enter-at/setup-typst@v0.3
       - name: Install dependencies
         run: pip install -e .
       - name: Build
