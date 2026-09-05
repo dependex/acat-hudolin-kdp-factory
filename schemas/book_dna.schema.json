@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Book DNA",
+  "description": "Schema for ACAT Hudolin Book DNA - defines the genetic blueprint of a book product",
+  "type": "object",
+  "required": ["id", "title", "format", "stages"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ACAT-KDP-GP[0-9]{3}$",
+      "description": "Unique product identifier"
+    },
+    "title": {
+      "type": "string",
+      "description": "Book title"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "authors": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "format": {
+      "type": "object",
+      "required": ["trim_size", "color_interior"],
+      "properties": {
+        "trim_size": { "type": "string", "enum": ["6x9", "5.5x8.5", "5x8"] },
+        "color_interior": { "type": "boolean" },
+        "paper_type": { "type": "string", "enum": ["white", "cream"] },
+        "binding": { "type": "string", "enum": ["paperback", "hardcover"] }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "ref": { "type": "string" },
+          "drive_id": { "type": "string" }
+        }
+      }
+    },
+    "stages": {
+      "type": "object",
+      "properties": {
+        "editorial": { "type": "object" },
+        "typesetting": { "type": "object" },
+        "cover": { "type": "object" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "isbn": { "type": "string" },
+        "language": { "type": "string" },
+        "categories": { "type": "array", "items": { "type": "string" } },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" }
+      }
+    }
+  }
+}

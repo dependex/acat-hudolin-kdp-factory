@@ -1,0 +1,29 @@
+name: Build Golden Product
+
+on:
+  workflow_dispatch:
+    inputs:
+      product_id:
+        description: 'Product ID (e.g., GP001)'
+        required: true
+        default: 'GP001'
+
+jobs:
+  build:
+    name: Build Product
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -e .
+      - name: Build
+        run: python -m src.orchestrator.pipeline --product ${{ github.event.inputs.product_id }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kdp-package-${{ github.event.inputs.product_id }}
+          path: output/

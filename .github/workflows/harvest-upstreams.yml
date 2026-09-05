@@ -1,0 +1,23 @@
+name: Harvest Upstreams
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  check-upstreams:
+    name: Check Upstream Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Typst release
+        run: |
+          echo "Checking latest Typst release..."
+          curl -s https://api.github.com/repos/typst/typst/releases/latest | jq -r '.tag_name'
+      - name: Check Paged.js release
+        run: |
+          echo "Checking latest Paged.js release..."
+          curl -s https://api.github.com/repos/pagedjs/pagedjs/releases/latest | jq -r '.tag_name'
+      - name: Report
+        run: echo "Upstream check complete"

@@ -1,0 +1,65 @@
+# Book DNA — Golden Product 001
+# DIARIO DEL CLUB — Guida Pratica per il Servitore-Insegnante
+
+id: ACAT-KDP-GP001
+title: "Diario del Club"
+subtitle: "Guida Pratica per il Servitore-Insegnante"
+authors:
+  - "ACAT Hudolin"
+
+format:
+  trim_size: "6x9"
+  color_interior: false
+  paper_type: "cream"
+  binding: "paperback"
+
+sources:
+  - type: knowledge_base
+    ref: HUDOLIN_360_KNOWLEDGE
+    drive_id: "1X17YJYmQ4ge9BW-kprxLhbvAqNSPlBH-"
+  - type: source_registry
+    ref: SOURCE_REGISTRY_MASTER
+    drive_id: "1W70Fjy95oiFM9P9m6CrsCPaK3M5EQzIx"
+  - type: club_method
+    ref: 02_CLUB_METHOD_OPERATION
+  - type: modulistica
+    ref: 06_MODULISTICA_DIARI_REGISTRI
+
+stages:
+  editorial:
+    tone: "professionale, empatico, pratico"
+    audience: "servitori-insegnanti CAT"
+    style_guide: "ACAT_HUDOLIN_EDITORIAL_SYSTEM_6x9_v1"
+    max_chapters: 12
+  typesetting:
+    engine: "typst"
+    template: "6x9/standard"
+    font_body: "Libertinus Serif"
+    font_heading: "Libertinus Sans"
+    font_size: "11pt"
+    line_height: 1.4
+  cover:
+    style: "professional_clean"
+    colors:
+      primary: "#2E7D32"    # Verde DEPENDEX
+      secondary: "#F57C00"  # Arancione DEPENDEX
+      background: "#FAFAFA"
+
+metadata:
+  language: "it"
+  categories:
+    - "Self-Help"
+    - "Psychology"
+    - "Addiction & Recovery"
+  keywords:
+    - "club alcologici territoriali"
+    - "metodo hudolin"
+    - "dipendenze"
+    - "servitore insegnante"
+    - "diario del club"
+    - "ACAT"
+  description: >
+    Una guida pratica per il Servitore-Insegnante dei Club Alcologici
+    Territoriali (CAT). Basata sul metodo Hudolin, offre strumenti concreti
+    per la conduzione quotidiana del Club, la documentazione delle sedute
+    e il monitoraggio del percorso delle famiglie.
